@@ -11,6 +11,7 @@ import {
   Select
 } from '@/components/ui/select'
 import PaymentForm from '../payment/PaymentForm'
+import { LoadingSpinner } from '@/components/ui/spinner'
 
 type Product = {
   id: string
@@ -37,23 +38,21 @@ export default function ProductDisplay() {
       .catch((error) => console.error('Fetching product data failed', error))
   }, [])
 
-  if (!product) {
-    return <div>Loading...</div>
-  }
+  if (!product) return <LoadingSpinner />
   return (
     <div className='grid max-w-6xl items-start gap-6 px-4 py-6 lg:grid-cols-12 lg:gap-12 lg:px-6'>
       <div className='grid items-start gap-3 md:grid-cols-5'>
         <div className='md:col-span-4'>
           <img
             alt='Product Image'
-            className='w-full overflow-hidden rounded-lg border border-gray-200 object-cover dark:border-gray-800'
+            className='w-full lg:w-96 max-w-[370px] overflow-hidden rounded-lg border border-gray-200 object-cover dark:border-gray-800'
             height={900}
+            width={600}
             src={product.image}
             style={{
               aspectRatio: '600/900',
               objectFit: 'cover'
             }}
-            width={600}
           />
         </div>
       </div>

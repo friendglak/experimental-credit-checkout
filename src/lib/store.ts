@@ -30,6 +30,7 @@ export const store = configureStore({
   reducer: {
     payment: paymentReducer
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
   preloadedState: preloadedState ? { payment: preloadedState } : undefined
 })
 
