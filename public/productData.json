@@ -1,0 +1,13 @@
+{
+  "id": "1",
+  "name": "Camiseta Logo Curvy - Negra",
+  "description": "Camiseta básica negra. Esta t-shirt tiene silueta regular, cuello redondo, manga corta y el logo de True estampado en alta.",
+  "price": 99,
+  "image": "https://trueshop.co/cdn/shop/files/Camiseta_Logo_Curvy_Negra_1_1800x1800.jpg?v=1705016322",
+  "ratings": 3.5,
+  "options": {
+    "colors": ["Black", "White", "Blue"],
+    "sizes": ["XS", "S", "M", "L", "XL"]
+  },
+  "quantityAvailable": [1, 2, 3, 4, 5]
+}
