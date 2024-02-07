@@ -29,7 +29,6 @@ export default function ProductDisplay() {
   const [product, setProduct] = useState<Product | null>(null)
 
   useEffect(() => {
-    // Asume que tu archivo JSON está en la carpeta public
     fetch('/productData.json')
       .then((response) => response.json())
       .then((data: Product) => {
@@ -61,6 +60,7 @@ export default function ProductDisplay() {
       <div className='flex flex-col gap-4 lg:col-span-7 lg:col-start-1'>
         <div className='grid items-start gap-4 md:gap-10'>
           <h1 className='text-3xl font-bold lg:text-5xl'>{product.name}</h1>
+          <h2 className='text-2xl font-bold lg:text-5xl'>${product.price}</h2>
           <div>
             <p>{product.description}</p>
           </div>
@@ -151,24 +151,5 @@ export default function ProductDisplay() {
         </form>
       </div>
     </div>
-  )
-}
-
-function StarIcon(props: { className: string }) {
-  return (
-    <svg
-      {...props}
-      xmlns='http://www.w3.org/2000/svg'
-      width='24'
-      height='24'
-      viewBox='0 0 24 24'
-      fill='none'
-      stroke='currentColor'
-      strokeWidth='2'
-      strokeLinecap='round'
-      strokeLinejoin='round'
-    >
-      <polygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2' />
-    </svg>
   )
 }

@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import { DialogContent, DialogTrigger, Dialog } from '@/components/ui/dialog'
+
 import { CreditCardIcon } from 'lucide-react'
 
 interface Product {
@@ -13,7 +14,9 @@ export default function PaymentDetails({ product }: { product: Product }) {
     <Dialog>
       <div className='flex h-full flex-col'>
         <DialogTrigger asChild>
-          <Button variant='default'>Pay with credit card</Button>
+          <Button type='submit' className='w-full' variant='default'>
+            Pay with credit card
+          </Button>
         </DialogTrigger>
         <DialogContent className='flex flex-1 flex-col justify-center space-y-4'>
           <div className='flex items-center space-x-2'>
