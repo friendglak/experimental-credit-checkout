@@ -1,26 +1,29 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-interface PaymentState {
-  paymentData: any
+export interface PaymentData {
+  name: string
+  cardNumber: string
+  expiry: string
+  cvv: string
 }
 
-const initialState: PaymentState = {
-  paymentData: null
+export interface PaymentState {
+  paymentData?: PaymentData
 }
 
-const paymentSlice = createSlice({
+const initialState: PaymentState = {}
+
+export const paymentSlice = createSlice({
   name: 'payment',
   initialState,
   reducers: {
-    setPaymentData: (state: PaymentState, action: PayloadAction<any>) => {
+    setPaymentData: (state, action: PayloadAction<PaymentData>) => {
+      console.log('Payment Data:', action.payload)
       state.paymentData = action.payload
-    },
-    clearPaymentData: (state: PaymentState) => {
-      state.paymentData = null
     }
   }
 })
 
-export const { setPaymentData, clearPaymentData } = paymentSlice.actions
+export const { setPaymentData } = paymentSlice.actions
 
 export default paymentSlice.reducer

@@ -1,45 +1,42 @@
-import { configureStore } from '@reduxjs/toolkit'
-import paymentReducer from './features/payments/paymentSlice'
-import productReducer from './features/products/productSlice'
+'use client'
 
-const loadFromLocalStorage = () => {
+import { configureStore } from '@reduxjs/toolkit'
+import paymentReducer, {
+  PaymentState
+} from '@/lib/features/payments/paymentSlice'
+
+function loadFromLocalStorage(): PaymentState | undefined {
   try {
     const serializedState = localStorage.getItem('paymentData')
-    if (serializedState === null) return undefined
-    return { payment: JSON.parse(serializedState) } // Ajuste aquí
+    return serializedState ? JSON.parse(serializedState) : undefined
   } catch (e) {
-    console.warn(e)
+    console.error('Could not load state:', e)
     return undefined
   }
 }
 
-const saveToLocalStorage = (state: RootState) => {
+function saveToLocalStorage(state: PaymentState): void {
   try {
     const serializedState = JSON.stringify(state)
     localStorage.setItem('paymentData', serializedState)
   } catch (e) {
-    console.warn(e)
+    console.error('Could not save state:', e)
   }
 }
 
-export const makeStore = () => {
-  const preloadedState = loadFromLocalStorage()
+const preloadedState = loadFromLocalStorage()
 
-  const store = configureStore({
-    reducer: {
-      payment: paymentReducer,
-      product: productReducer
-    },
-    preloadedState
-  })
+export const store = configureStore({
+  reducer: {
+    payment: paymentReducer
+  },
+  preloadedState: preloadedState ? { payment: preloadedState } : undefined
+})
 
-  store.subscribe(() => {
-    saveToLocalStorage(store.getState())
-  })
+store.subscribe(() => {
+  saveToLocalStorage(store.getState().payment)
+})
 
-  return store
-}
-
-export type AppStore = ReturnType<typeof makeStore>
-export type RootState = ReturnType<AppStore['getState']>
-export type AppDispatch = AppStore['dispatch']
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch
+export type AppStore = typeof store

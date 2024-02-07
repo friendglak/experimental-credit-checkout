@@ -12,18 +12,13 @@ import {
 } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
-import { setPaymentData } from '@/lib/features/payments/paymentSlice'
-import { useAppDispatch } from '@/lib/hooks'
+
 import PaymentDetails from './PaymentDetails'
-import { useSelector } from 'react-redux'
+import { useState } from 'react'
+import { setPaymentData } from '@/lib/features/payments/paymentSlice'
+import { useAppDispatch, useAppSelector } from '@/lib/hooks'
 import { RootState } from '@/lib/store'
 
-interface PaymentInfo {
-  cardNumber: string
-  expiryDate: string
-  cvv: string
-  cardHolderName: string
-}
 
 interface Product {
   name: string
@@ -34,13 +29,44 @@ interface Product {
 export default function PaymentForm({ product }: { product: Product }) {
   const dispatch = useAppDispatch()
 
-  // const handlePayment = (paymentInfo: PaymentInfo) => {
-  //   // Aquí asumimos que handlePayment se ajustará para manejar correctamente los datos de pago
-  //   // Tal vez necesites un estado local para manejar los valores de los inputs
-  //   console.log(paymentInfo) // Placeholder para tu lógica de manejo de pagos
-  //   dispatch(setPaymentData(paymentInfo))
-  // }
+  const previousPaymentData = useAppSelector(
+    (state: RootState) => state.payment.paymentData
+  )
 
+  const [name, setName] = useState(previousPaymentData?.name || '')
+  const [cardNumber, setCardNumber] = useState(
+    previousPaymentData?.cardNumber || ''
+  )
+
+  const [expiry, setExpiry] = useState(previousPaymentData?.expiry || '')
+  const [cvv, setCvv] = useState(previousPaymentData?.cvv || '')
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault()
+    const paymentInfo = { name, cardNumber, expiry, cvv }
+    dispatch(setPaymentData(paymentInfo))
+    console.log('Payment Info:', paymentInfo)
+  }
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = event.target
+    switch (id) {
+      case 'name':
+        setName(value)
+        break
+      case 'cardNumber':
+        setCardNumber(value)
+        break
+      case 'expiry':
+        setExpiry(value)
+        break
+      case 'cvv':
+        setCvv(value)
+        break
+      default:
+        break
+    }
+  }
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -52,10 +78,10 @@ export default function PaymentForm({ product }: { product: Product }) {
           <DialogDescription>
             Enter your payment details to complete the purchase.
           </DialogDescription>
-          <span className='flex flex-row items-center text-balance text-center'>
+          <span className='flex flex-row items-center justify-between text-balance text-center'>
             <img
               alt='Product Image'
-              className='w-full max-w-40 overflow-hidden rounded-lg border border-gray-200 object-cover  dark:border-gray-800'
+              className='w-full max-w-[50%] overflow-hidden rounded-lg border border-gray-200 object-cover  dark:border-gray-800'
               src={product.image}
               height={100}
               width={100}
@@ -65,15 +91,25 @@ export default function PaymentForm({ product }: { product: Product }) {
             </DialogDescription>
           </span>
         </DialogHeader>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className='grid gap-4 py-4'>
             <div className='grid gap-2'>
               <Label htmlFor='name'>Name</Label>
-              <Input id='name' placeholder='Enter your name' />
+              <Input
+                id='name'
+                value={name}
+                onChange={handleInputChange}
+                placeholder='Enter your name'
+              />
             </div>
             <div className='relative space-y-2'>
               <Label htmlFor='cardNumber'>Card Number</Label>
-              <Input id='cardNumber' placeholder='Enter your card number' />
+              <Input
+                id='cardNumber'
+                value={cardNumber}
+                onChange={handleInputChange}
+                placeholder='Enter your card number'
+              />
               <Button
                 className='absolute bottom-1 right-1 h-7 w-7'
                 size='icon'
@@ -86,18 +122,28 @@ export default function PaymentForm({ product }: { product: Product }) {
             <div className='grid grid-cols-3 gap-4'>
               <div className='space-y-2'>
                 <Label htmlFor='expiry'>Expiry Date</Label>
-                <Input id='expiry' placeholder='MM/YY' />
+                <Input
+                  id='expiry'
+                  value={expiry}
+                  onChange={handleInputChange}
+                  placeholder='MM/YY'
+                />
               </div>
               <div className='space-y-2'>
                 <Label htmlFor='cvv'>CVV</Label>
-                <Input id='cvv' placeholder='CVV' />
+                <Input
+                  id='cvv'
+                  value={cvv}
+                  onChange={handleInputChange}
+                  placeholder='CVV'
+                />
               </div>
             </div>
           </div>
+          <DialogFooter>
+            <PaymentDetails product={product} />
+          </DialogFooter>
         </form>
-        <DialogFooter>
-          <PaymentDetails product={product} />
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   )
